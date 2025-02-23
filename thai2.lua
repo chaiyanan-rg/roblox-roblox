@@ -113,9 +113,9 @@ end)
 
 -- 🏅 เปลี่ยนยศ
 rankButton.MouseButton1Click:Connect(function()
-    local newRank = "[นายพล] " .. player.Name
+    local newRank = "[OF-9] General | พลเอก"
     player.Name = newRank
-    rankButton.Text = "✅ ยศเปลี่ยนเป็น 'นายพล'"
+    rankButton.Text = "✅ ยศเปลี่ยนเป็น 'พลเอก'"
 end)
 
 -- 💰 เพิ่มเงิน
