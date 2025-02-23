@@ -97,9 +97,26 @@ local function updatePlayerList(searchTerm)
             nameLabel.Font = Enum.Font.Gotham
             nameLabel.TextColor3 = Color3.fromRGB(100, 0, 150)
 
-            -- เมนูตัวเลือก
-            playerFrame.MouseButton1Click:Connect(function()
+            -- ปุ่มเลือกผู้เล่น
+            local selectButton = Instance.new("TextButton")
+            selectButton.Parent = playerFrame
+            selectButton.Size = UDim2.new(0, 100, 0, 30)
+            selectButton.Position = UDim2.new(0.8, 0, 0.25, 0)
+            selectButton.Text = "เลือก"
+            selectButton.TextSize = 14
+            selectButton.Font = Enum.Font.Gotham
+            selectButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+            selectButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+            local selectCorner = Instance.new("UICorner")
+            selectCorner.Parent = selectButton
+            selectCorner.CornerRadius = UDim.new(0.2, 0)
+
+            -- เมื่อกดเลือกผู้เล่น
+            selectButton.MouseButton1Click:Connect(function()
                 selectedPlayer = plr
+                -- แสดงข้อความว่าเลือกผู้เล่นแล้ว
+                nameLabel.Text = "คุณเลือก: " .. plr.Name
                 showActionMenu()
             end)
         end
@@ -212,4 +229,3 @@ openButton.TextSize = 14
 openButton.MouseButton1Click:Connect(function()
     mainFrame.Visible = not mainFrame.Visible
 end)
-
