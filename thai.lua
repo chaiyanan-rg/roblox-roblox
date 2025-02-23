@@ -1,82 +1,108 @@
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
--- GUI หลัก
+-- สร้าง ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
-local mainFrame = Instance.new("Frame")
-mainFrame.Parent = screenGui
-mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-mainFrame.Size = UDim2.new(0, 250, 0, 300)
-mainFrame.Position = UDim2.new(0.2, 0, 0.3, 0)
-mainFrame.BorderSizePixel = 2
-mainFrame.BorderColor3 = Color3.fromRGB(100, 0, 150)
-mainFrame.Active = true
-mainFrame.Draggable = true
+-- สร้างปุ่มวงกลม (เมนูหลัก)
+local mainButton = Instance.new("TextButton")
+mainButton.Parent = screenGui
+mainButton.Size = UDim2.new(0, 60, 0, 60)
+mainButton.Position = UDim2.new(0.05, 0, 0.5, -30)
+mainButton.BackgroundColor3 = Color3.fromRGB(100, 0, 150)
+mainButton.Text = "⚡"
+mainButton.TextSize = 24
+mainButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+mainButton.BorderSizePixel = 0
+mainButton.Font = Enum.Font.GothamBold
+mainButton.BackgroundTransparency = 0.2
+mainButton.ClipsDescendants = true
+mainButton.AutoButtonColor = true
+mainButton.Visible = true
+mainButton.ZIndex = 10
 
-local toggleButton = Instance.new("TextButton")
-toggleButton.Parent = mainFrame
-toggleButton.BackgroundColor3 = Color3.fromRGB(100, 0, 150)
-toggleButton.Size = UDim2.new(1, 0, 0, 30)
-toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleButton.Text = "🔽 Menu"
-toggleButton.TextSize = 18
+-- ปรับให้เป็นวงกลม
+local corner = Instance.new("UICorner")
+corner.Parent = mainButton
+corner.CornerRadius = UDim.new(1, 0)
 
-local contentFrame = Instance.new("Frame")
-contentFrame.Parent = mainFrame
-contentFrame.Size = UDim2.new(1, 0, 1, -30)
-contentFrame.Position = UDim2.new(0, 0, 0, 30)
-contentFrame.BackgroundTransparency = 1
+-- สร้างเมนูที่ 2
+local menuFrame = Instance.new("Frame")
+menuFrame.Parent = screenGui
+menuFrame.Size = UDim2.new(0, 250, 0, 300)
+menuFrame.Position = UDim2.new(0.2, 0, 0.3, 0)
+menuFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+menuFrame.BorderSizePixel = 2
+menuFrame.BorderColor3 = Color3.fromRGB(100, 0, 150)
+menuFrame.Visible = false
+menuFrame.Active = true
+menuFrame.Draggable = true
 
-local dropDown = Instance.new("TextButton")
-dropDown.Parent = contentFrame
-dropDown.Size = UDim2.new(0.8, 0, 0, 30)
-dropDown.Position = UDim2.new(0.1, 0, 0.05, 0)
-dropDown.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-dropDown.Text = "เลือกผู้เล่น"
-dropDown.TextColor3 = Color3.fromRGB(255, 255, 255)
+local menuCorner = Instance.new("UICorner")
+menuCorner.Parent = menuFrame
+menuCorner.CornerRadius = UDim.new(0.1, 0)
 
+-- สร้าง ScrollingFrame สำหรับรายชื่อผู้เล่น
 local playerList = Instance.new("ScrollingFrame")
-playerList.Parent = contentFrame
-playerList.Size = UDim2.new(0.8, 0, 0, 100)
-playerList.Position = UDim2.new(0.1, 0, 0.2, 0)
+playerList.Parent = menuFrame
+playerList.Size = UDim2.new(0.8, 0, 0.4, 0)
+playerList.Position = UDim2.new(0.1, 0, 0.1, 0)
 playerList.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
-playerList.Visible = false
 playerList.CanvasSize = UDim2.new(0, 0, 5, 0)
+playerList.BorderSizePixel = 2
+playerList.ScrollBarThickness = 5
+playerList.AutomaticCanvasSize = Enum.AutomaticSize.Y
+
+local listCorner = Instance.new("UICorner")
+listCorner.Parent = playerList
+listCorner.CornerRadius = UDim.new(0.1, 0)
 
 local selectedPlayer = nil
 
-dropDown.MouseButton1Click:Connect(function()
-    playerList.Visible = not playerList.Visible
+-- อัปเดตรายชื่อผู้เล่น
+local function updatePlayerList()
     playerList:ClearAllChildren()
     
     for _, plr in pairs(game.Players:GetPlayers()) do
-        if plr ~= player then
-            local button = Instance.new("TextButton")
-            button.Parent = playerList
-            button.Size = UDim2.new(1, 0, 0, 25)
-            button.Text = plr.Name
-            button.TextColor3 = Color3.fromRGB(255, 255, 255)
-            button.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+        local button = Instance.new("TextButton")
+        button.Parent = playerList
+        button.Size = UDim2.new(1, 0, 0, 25)
+        button.Text = plr.Name
+        button.TextColor3 = Color3.fromRGB(255, 255, 255)
+        button.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+        button.Font = Enum.Font.Gotham
+        button.TextSize = 14
 
-            button.MouseButton1Click:Connect(function()
-                selectedPlayer = plr
-                dropDown.Text = "เลือก: " .. plr.Name
-                playerList.Visible = false
-            end)
-        end
+        local btnCorner = Instance.new("UICorner")
+        btnCorner.Parent = button
+        btnCorner.CornerRadius = UDim.new(0.2, 0)
+
+        button.MouseButton1Click:Connect(function()
+            selectedPlayer = plr
+        end)
+    end
+end
+
+-- ดึงรายชื่อทุกครั้งที่เปิดเมนู
+menuFrame:GetPropertyChangedSignal("Visible"):Connect(function()
+    if menuFrame.Visible then
+        updatePlayerList()
     end
 end)
 
-local function createActionButton(text, pos, action)
+local function createActionButton(icon, text, pos, action)
     local button = Instance.new("TextButton")
-    button.Parent = contentFrame
+    button.Parent = menuFrame
     button.Size = UDim2.new(0.8, 0, 0, 30)
     button.Position = UDim2.new(0.1, 0, pos, 0)
     button.BackgroundColor3 = Color3.fromRGB(100, 0, 150)
-    button.Text = text
+    button.Text = icon .. " " .. text
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.Parent = button
+    btnCorner.CornerRadius = UDim.new(0.2, 0)
 
     button.MouseButton1Click:Connect(function()
         if selectedPlayer then
@@ -85,27 +111,28 @@ local function createActionButton(text, pos, action)
     end)
 end
 
-createActionButton("💀 ฆ่าผู้เล่น", 0.4, function(target)
+createActionButton("💀", "ฆ่าผู้เล่น", 0.55, function(target)
     if target.Character then
         target.Character:BreakJoints()
     end
 end)
 
-createActionButton("🚀 ไปหาผู้เล่น", 0.55, function(target)
+createActionButton("🚀", "ไปหาผู้เล่น", 0.7, function(target)
     if player.Character and target.Character then
         player.Character:MoveTo(target.Character:GetPrimaryPartCFrame().Position)
     end
 end)
 
-createActionButton("🌀 ดึงผู้เล่นมา", 0.7, function(target)
+createActionButton("🌀", "ดึงผู้เล่นมา", 0.85, function(target)
     if target.Character and player.Character then
         target.Character:SetPrimaryPartCFrame(player.Character:GetPrimaryPartCFrame())
     end
 end)
 
-local isMenuOpen = true
-toggleButton.MouseButton1Click:Connect(function()
+-- ปุ่มเปิด/ปิดเมนู
+local isMenuOpen = false
+mainButton.MouseButton1Click:Connect(function()
     isMenuOpen = not isMenuOpen
-    contentFrame.Visible = isMenuOpen
-    toggleButton.Text = isMenuOpen and "🔽 Menu" or "🔼 Menu"
+    menuFrame.Visible = isMenuOpen
 end)
+
