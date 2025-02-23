@@ -97,11 +97,95 @@ local function updatePlayerList(searchTerm)
             nameLabel.Font = Enum.Font.Gotham
             nameLabel.TextColor3 = Color3.fromRGB(100, 0, 150)
 
+            -- เมนูตัวเลือก
             playerFrame.MouseButton1Click:Connect(function()
                 selectedPlayer = plr
+                showActionMenu()
             end)
         end
     end
+end
+
+-- ฟังก์ชันแสดงเมนูตัวเลือก
+local function showActionMenu()
+    if not selectedPlayer then return end
+
+    -- เมนูตัวเลือก
+    local actionFrame = Instance.new("Frame")
+    actionFrame.Parent = mainFrame
+    actionFrame.Size = UDim2.new(0.9, 0, 0, 120)
+    actionFrame.Position = UDim2.new(0.05, 0, 0.65, 0)
+    actionFrame.BackgroundColor3 = Color3.fromRGB(230, 230, 250)
+    
+    local actionCorner = Instance.new("UICorner")
+    actionCorner.Parent = actionFrame
+    actionCorner.CornerRadius = UDim.new(0.1, 0)
+
+    -- ปุ่มไปหาผู้เล่น
+    local moveButton = Instance.new("TextButton")
+    moveButton.Parent = actionFrame
+    moveButton.Size = UDim2.new(1, 0, 0, 40)
+    moveButton.Position = UDim2.new(0, 0, 0.1, 0)
+    moveButton.Text = "🚶‍♂️ ไปหาผู้เล่น"
+    moveButton.TextSize = 16
+    moveButton.Font = Enum.Font.Gotham
+    moveButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+    moveButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+    moveButton.MouseButton1Click:Connect(function()
+        if player.Character and selectedPlayer.Character then
+            player.Character:MoveTo(selectedPlayer.Character:GetPrimaryPartCFrame().Position)
+        end
+    end)
+
+    -- ปุ่มดึงผู้เล่นมา
+    local pullButton = Instance.new("TextButton")
+    pullButton.Parent = actionFrame
+    pullButton.Size = UDim2.new(1, 0, 0, 40)
+    pullButton.Position = UDim2.new(0, 0, 0.3, 0)
+    pullButton.Text = "🤲 ดึงผู้เล่นมา"
+    pullButton.TextSize = 16
+    pullButton.Font = Enum.Font.Gotham
+    pullButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+    pullButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+    pullButton.MouseButton1Click:Connect(function()
+        if selectedPlayer.Character and player.Character then
+            selectedPlayer.Character:SetPrimaryPartCFrame(player.Character:GetPrimaryPartCFrame())
+        end
+    end)
+
+    -- ปุ่มฆ่าผู้เล่น
+    local killButton = Instance.new("TextButton")
+    killButton.Parent = actionFrame
+    killButton.Size = UDim2.new(1, 0, 0, 40)
+    killButton.Position = UDim2.new(0, 0, 0.5, 0)
+    killButton.Text = "💀 ฆ่าผู้เล่น"
+    killButton.TextSize = 16
+    killButton.Font = Enum.Font.Gotham
+    killButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+    killButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+    killButton.MouseButton1Click:Connect(function()
+        if selectedPlayer.Character then
+            selectedPlayer.Character:BreakJoints()
+        end
+    end)
+
+    -- ฟังก์ชันปิดเมนู
+    local closeButton = Instance.new("TextButton")
+    closeButton.Parent = actionFrame
+    closeButton.Size = UDim2.new(1, 0, 0, 40)
+    closeButton.Position = UDim2.new(0, 0, 0.7, 0)
+    closeButton.Text = "❌ ปิดเมนู"
+    closeButton.TextSize = 16
+    closeButton.Font = Enum.Font.Gotham
+    closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+    closeButton.MouseButton1Click:Connect(function()
+        actionFrame:Destroy()
+    end)
 end
 
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
@@ -114,56 +198,7 @@ mainFrame:GetPropertyChangedSignal("Visible"):Connect(function()
     end
 end)
 
--- ฟังก์ชันสร้างปุ่ม
-local function createActionButton(icon, text, pos, action)
-    local button = Instance.new("ImageButton")
-    button.Parent = mainFrame
-    button.Size = UDim2.new(0.9, 0, 0, 40)
-    button.Position = UDim2.new(0.05, 0, pos, 0)
-    button.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-    button.Image = icon 
-
-    local btnCorner = Instance.new("UICorner")
-    btnCorner.Parent = button
-    btnCorner.CornerRadius = UDim.new(0.2, 0)
-
-    local buttonText = Instance.new("TextLabel")
-    buttonText.Parent = button
-    buttonText.Size = UDim2.new(0.8, 0, 1, 0)
-    buttonText.Position = UDim2.new(0.2, 0, 0, 0)
-    buttonText.BackgroundTransparency = 1
-    buttonText.Text = text
-    buttonText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    buttonText.Font = Enum.Font.GothamBold
-    buttonText.TextSize = 16
-    buttonText.TextXAlignment = Enum.TextXAlignment.Left
-
-    button.MouseButton1Click:Connect(function()
-        if selectedPlayer then
-            action(selectedPlayer)
-        end
-    end)
-end
-
-createActionButton("🔪", "ฆ่าผู้เล่น", 0.65, function(target)
-    if target.Character then
-        target.Character:BreakJoints()
-    end
-end)
-
-createActionButton("👷🏻→🧒🏻", "ไปหาผู้เล่น", 0.75, function(target)
-    if player.Character and target.Character then
-        player.Character:MoveTo(target.Character:GetPrimaryPartCFrame().Position)
-    end
-end)
-
-createActionButton("👷🏻←🧒🏻", "ดึงผู้เล่นมา", 0.85, function(target)
-    if target.Character and player.Character then
-        target.Character:SetPrimaryPartCFrame(player.Character:GetPrimaryPartCFrame())
-    end
-end)
-
--- ปุ่มเปิดเมนู
+-- ฟังก์ชันเปิด/ปิดเมนู
 local openButton = Instance.new("TextButton")
 openButton.Parent = screenGui
 openButton.Size = UDim2.new(0, 100, 0, 40)
@@ -177,3 +212,4 @@ openButton.TextSize = 14
 openButton.MouseButton1Click:Connect(function()
     mainFrame.Visible = not mainFrame.Visible
 end)
+
