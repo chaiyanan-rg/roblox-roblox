@@ -9,7 +9,7 @@ mainFrame.Size = UDim2.new(0, 400, 0, 500)
 mainFrame.Position = UDim2.new(0.5, -200, 0.35, 0)
 mainFrame.BackgroundColor3 = Color3.fromRGB(240, 240, 255)
 mainFrame.BorderSizePixel = 0
-mainFrame.Visible = true
+mainFrame.Visible = false
 mainFrame.Active = true
 mainFrame.Draggable = true
 
@@ -117,6 +117,7 @@ local function updatePlayerList(searchTerm)
                 selectedPlayer = plr
                 -- แสดงข้อความว่าเลือกผู้เล่นแล้ว
                 nameLabel.Text = "คุณเลือก: " .. plr.Name
+                showActionMenu()
             end)
         end
     end
@@ -186,6 +187,42 @@ local function showActionMenu()
         if selectedPlayer.Character then
             selectedPlayer.Character:BreakJoints()
         end
+    end)
+
+    -- ฟังก์ชันติดตามผู้เล่น
+    local followButton = Instance.new("TextButton")
+    followButton.Parent = actionFrame
+    followButton.Size = UDim2.new(1, 0, 0, 40)
+    followButton.Position = UDim2.new(0, 0, 0.7, 0)
+    followButton.Text = "👁️‍🗨️ ติดตามผู้เล่น"
+    followButton.TextSize = 16
+    followButton.Font = Enum.Font.Gotham
+    followButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255) -- สีม่วง
+    followButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- ตัวอักษรสีขาว
+
+    followButton.MouseButton1Click:Connect(function()
+        if selectedPlayer.Character then
+            -- เปลี่ยนมุมมองเป็นผู้เล่นที่เลือก
+            local camera = game.Workspace.CurrentCamera
+            camera.CameraSubject = selectedPlayer.Character
+        end
+    end)
+
+    -- ฟังก์ชันกลับไปมุมมองตัวเอง
+    local returnButton = Instance.new("TextButton")
+    returnButton.Parent = actionFrame
+    returnButton.Size = UDim2.new(1, 0, 0, 40)
+    returnButton.Position = UDim2.new(0, 0, 0.9, 0)
+    returnButton.Text = "↩️ กลับไปมุมมองตัวเอง"
+    returnButton.TextSize = 16
+    returnButton.Font = Enum.Font.Gotham
+    returnButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255) -- สีม่วง
+    returnButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- ตัวอักษรสีขาว
+
+    returnButton.MouseButton1Click:Connect(function()
+        -- กลับมุมมองตัวเอง
+        local camera = game.Workspace.CurrentCamera
+        camera.CameraSubject = player.Character
     end)
 end
 
