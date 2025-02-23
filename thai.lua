@@ -105,8 +105,8 @@ local function updatePlayerList(searchTerm)
             selectButton.Text = "เลือก"
             selectButton.TextSize = 14
             selectButton.Font = Enum.Font.Gotham
-            selectButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-            selectButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+            selectButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255) -- สีม่วง
+            selectButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- ตัวอักษรสีขาว
 
             local selectCorner = Instance.new("UICorner")
             selectCorner.Parent = selectButton
@@ -145,8 +145,8 @@ local function showActionMenu()
     moveButton.Text = "🚶‍♂️ ไปหาผู้เล่น"
     moveButton.TextSize = 16
     moveButton.Font = Enum.Font.Gotham
-    moveButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-    moveButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    moveButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255) -- สีม่วง
+    moveButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- ตัวอักษรสีขาว
 
     moveButton.MouseButton1Click:Connect(function()
         if player.Character and selectedPlayer.Character then
@@ -162,8 +162,8 @@ local function showActionMenu()
     pullButton.Text = "🤲 ดึงผู้เล่นมา"
     pullButton.TextSize = 16
     pullButton.Font = Enum.Font.Gotham
-    pullButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-    pullButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    pullButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255) -- สีม่วง
+    pullButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- ตัวอักษรสีขาว
 
     pullButton.MouseButton1Click:Connect(function()
         if selectedPlayer.Character and player.Character then
@@ -179,8 +179,8 @@ local function showActionMenu()
     killButton.Text = "💀 ฆ่าผู้เล่น"
     killButton.TextSize = 16
     killButton.Font = Enum.Font.Gotham
-    killButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-    killButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    killButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255) -- สีม่วง
+    killButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- ตัวอักษรสีขาว
 
     killButton.MouseButton1Click:Connect(function()
         if selectedPlayer.Character then
@@ -198,13 +198,12 @@ local openButton = Instance.new("TextButton")
 openButton.Parent = screenGui
 openButton.Size = UDim2.new(0, 100, 0, 40)
 openButton.Position = UDim2.new(0.05, 0, 0.05, 0)
-openButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+openButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255) -- สีม่วง
 openButton.Text = "🔧 เปิดเมนู"
-openButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+openButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- ตัวอักษรสีขาว
 openButton.Font = Enum.Font.GothamBold
 openButton.TextSize = 14
 
 openButton.MouseButton1Click:Connect(function()
     mainFrame.Visible = not mainFrame.Visible
 end)
-
