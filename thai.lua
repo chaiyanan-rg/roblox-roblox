@@ -229,3 +229,4 @@ openButton.TextSize = 14
 openButton.MouseButton1Click:Connect(function()
     mainFrame.Visible = not mainFrame.Visible
 end)
+
