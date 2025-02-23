@@ -113,15 +113,6 @@ local function updateDashboard()
             spectateButton.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
             spectateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-            -- ปุ่มเตะออกจากแมพ
-            local kickButton = Instance.new("TextButton")
-            kickButton.Parent = row
-            kickButton.Size = UDim2.new(0.2, 0, 1, 0)
-            kickButton.Position = UDim2.new(0.95, 0, 0, 0)
-            kickButton.Text = "🚫 เตะ"
-            kickButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-            kickButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-
             -- ฟังก์ชันวาร์ปไปหาผู้เล่น
             tpButton.MouseButton1Click:Connect(function()
                 if player.Character and plr.Character then
@@ -139,11 +130,6 @@ local function updateDashboard()
             -- ฟังก์ชันเปลี่ยนมุมมองไปที่ผู้เล่น
             spectateButton.MouseButton1Click:Connect(function()
                 game.Workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
-            end)
-
-            -- ฟังก์ชันเตะออกจากแมพ
-            kickButton.MouseButton1Click:Connect(function()
-                plr:Kick("คุณถูกแอดมินเตะออกจากเกม!")
             end)
         end
     end
