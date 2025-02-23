@@ -20,8 +20,8 @@ toggleCorner.CornerRadius = UDim.new(0.2, 0)
 -- หน้าหลัก (ล็อคกลางจอ)
 local mainFrame = Instance.new("Frame")
 mainFrame.Parent = screenGui
-mainFrame.Size = UDim2.new(0, 600, 0, 400)
-mainFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
+mainFrame.Size = UDim2.new(0, 700, 0, 500)
+mainFrame.Position = UDim2.new(0.5, -350, 0.5, -250)
 mainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 mainFrame.BackgroundTransparency = 0.1
 mainFrame.Visible = false
@@ -30,7 +30,7 @@ local frameCorner = Instance.new("UICorner")
 frameCorner.Parent = mainFrame
 frameCorner.CornerRadius = UDim.new(0.05, 0)
 
--- แถบหัวข้อ
+-- หัวข้อ UI
 local header = Instance.new("TextLabel")
 header.Parent = mainFrame
 header.Size = UDim2.new(1, 0, 0, 50)
@@ -44,11 +44,11 @@ local headerCorner = Instance.new("UICorner")
 headerCorner.Parent = header
 headerCorner.CornerRadius = UDim.new(0.1, 0)
 
--- ช่องค้นหาผู้เล่น
+-- ช่องค้นหา
 local searchBox = Instance.new("TextBox")
 searchBox.Parent = mainFrame
 searchBox.Size = UDim2.new(0.9, 0, 0, 40)
-searchBox.Position = UDim2.new(0.05, 0, 0.15, 0)
+searchBox.Position = UDim2.new(0.05, 0, 0.12, 0)
 searchBox.PlaceholderText = "🔍 ค้นหาผู้เล่น..."
 searchBox.Text = ""
 searchBox.TextSize = 16
@@ -60,11 +60,11 @@ local searchCorner = Instance.new("UICorner")
 searchCorner.Parent = searchBox
 searchCorner.CornerRadius = UDim.new(0.1, 0)
 
--- รายการผู้เล่น
+-- รายการผู้เล่น (Scroll)
 local playerList = Instance.new("ScrollingFrame")
 playerList.Parent = mainFrame
-playerList.Size = UDim2.new(0.9, 0, 0.4, 0)
-playerList.Position = UDim2.new(0.05, 0, 0.25, 0)
+playerList.Size = UDim2.new(0.9, 0, 0.7, 0)
+playerList.Position = UDim2.new(0.05, 0, 0.2, 0)
 playerList.BackgroundColor3 = Color3.fromRGB(230, 230, 250)
 playerList.BorderSizePixel = 0
 playerList.CanvasSize = UDim2.new(0, 0, 5, 0)
@@ -77,14 +77,14 @@ listCorner.CornerRadius = UDim.new(0.1, 0)
 
 local selectedPlayer = nil
 
--- ฟังก์ชันอัปเดตรายชื่อผู้เล่น พร้อมรูปโปรไฟล์
+-- อัปเดตรายชื่อผู้เล่น
 local function updatePlayerList(searchTerm)
     playerList:ClearAllChildren()
     for _, plr in pairs(game.Players:GetPlayers()) do
         if searchTerm == "" or string.find(string.lower(plr.Name), string.lower(searchTerm)) then
             local playerFrame = Instance.new("Frame")
             playerFrame.Parent = playerList
-            playerFrame.Size = UDim2.new(1, 0, 0, 50)
+            playerFrame.Size = UDim2.new(1, 0, 0, 100)
             playerFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             playerFrame.BackgroundTransparency = 0.2
 
@@ -95,7 +95,7 @@ local function updatePlayerList(searchTerm)
             -- รูปโปรไฟล์
             local avatar = Instance.new("ImageLabel")
             avatar.Parent = playerFrame
-            avatar.Size = UDim2.new(0, 40, 0, 40)
+            avatar.Size = UDim2.new(0, 60, 0, 60)
             avatar.Position = UDim2.new(0.02, 0, 0.1, 0)
             avatar.Image = "https://www.roblox.com/headshot-thumbnail/image?userId="..plr.UserId.."&width=100&height=100&format=png"
             avatar.BackgroundTransparency = 1
@@ -103,80 +103,67 @@ local function updatePlayerList(searchTerm)
             -- ชื่อผู้เล่น
             local nameLabel = Instance.new("TextLabel")
             nameLabel.Parent = playerFrame
-            nameLabel.Size = UDim2.new(0.6, 0, 1, 0)
-            nameLabel.Position = UDim2.new(0.2, 0, 0, 0)
+            nameLabel.Size = UDim2.new(0.6, 0, 0.5, 0)
+            nameLabel.Position = UDim2.new(0.2, 0, 0.1, 0)
             nameLabel.BackgroundTransparency = 1
             nameLabel.Text = plr.Name
-            nameLabel.TextSize = 16
-            nameLabel.Font = Enum.Font.Gotham
+            nameLabel.TextSize = 18
+            nameLabel.Font = Enum.Font.GothamBold
             nameLabel.TextColor3 = Color3.fromRGB(100, 0, 150)
 
-            -- ปุ่มเลือก
-            local selectButton = Instance.new("TextButton")
-            selectButton.Parent = playerFrame
-            selectButton.Size = UDim2.new(0, 100, 0, 30)
-            selectButton.Position = UDim2.new(0.75, 0, 0.2, 0)
-            selectButton.Text = "เลือก"
-            selectButton.TextSize = 14
-            selectButton.Font = Enum.Font.Gotham
-            selectButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-            selectButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+            -- ปุ่มแอ็กชัน
+            local actionButtons = {
+                {Text = "🚶‍♂️ ไปหา", Action = function() player.Character:MoveTo(plr.Character:GetPrimaryPartCFrame().Position) end},
+                {Text = "🤲 ดึง", Action = function() plr.Character:SetPrimaryPartCFrame(player.Character:GetPrimaryPartCFrame()) end},
+                {Text = "💀 ฆ่า", Action = function() plr.Character:BreakJoints() end}
+            }
 
-            local selectCorner = Instance.new("UICorner")
-            selectCorner.Parent = selectButton
-            selectCorner.CornerRadius = UDim.new(0.2, 0)
+            local followButton = Instance.new("TextButton")
+            followButton.Parent = playerFrame
+            followButton.Size = UDim2.new(0, 80, 0, 30)
+            followButton.Position = UDim2.new(0.8, 0, 0.1, 0)
+            followButton.Text = "👁️‍🗨️ ติดตาม"
+            followButton.TextSize = 14
+            followButton.Font = Enum.Font.Gotham
+            followButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+            followButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-            -- เมื่อกดเลือกผู้เล่น
-            selectButton.MouseButton1Click:Connect(function()
-                selectedPlayer = plr
-                showActionMenu(plr)
+            local followCorner = Instance.new("UICorner")
+            followCorner.Parent = followButton
+            followCorner.CornerRadius = UDim.new(0.2, 0)
+
+            local isFollowing = false
+
+            followButton.MouseButton1Click:Connect(function()
+                if not isFollowing then
+                    game.Workspace.CurrentCamera.CameraSubject = plr.Character
+                    followButton.Text = "↩️ กลับมุมมอง"
+                    isFollowing = true
+                else
+                    game.Workspace.CurrentCamera.CameraSubject = player.Character
+                    followButton.Text = "👁️‍🗨️ ติดตาม"
+                    isFollowing = false
+                end
             end)
+
+            for i, btnData in ipairs(actionButtons) do
+                local actionButton = Instance.new("TextButton")
+                actionButton.Parent = playerFrame
+                actionButton.Size = UDim2.new(0, 80, 0, 30)
+                actionButton.Position = UDim2.new(0.2 + (i - 1) * 0.2, 0, 0.6, 0)
+                actionButton.Text = btnData.Text
+                actionButton.TextSize = 14
+                actionButton.Font = Enum.Font.Gotham
+                actionButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+                actionButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+                local actionCorner = Instance.new("UICorner")
+                actionCorner.Parent = actionButton
+                actionCorner.CornerRadius = UDim.new(0.2, 0)
+
+                actionButton.MouseButton1Click:Connect(btnData.Action)
+            end
         end
-    end
-end
-
--- แสดงเมนูคำสั่ง (แนวนอน)
-local function showActionMenu(plr)
-    if not plr then return end
-
-    local actionFrame = Instance.new("Frame")
-    actionFrame.Parent = mainFrame
-    actionFrame.Size = UDim2.new(0.9, 0, 0, 80)
-    actionFrame.Position = UDim2.new(0.05, 0, 0.7, 0)
-    actionFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    actionFrame.BackgroundTransparency = 0.2
-
-    local actionCorner = Instance.new("UICorner")
-    actionCorner.Parent = actionFrame
-    actionCorner.CornerRadius = UDim.new(0.1, 0)
-
-    -- ปุ่มต่าง ๆ
-    local buttons = {
-        {Text = "🚶‍♂️ ไปหาผู้เล่น", Action = function() player.Character:MoveTo(plr.Character:GetPrimaryPartCFrame().Position) end},
-        {Text = "🤲 ดึงผู้เล่นมา", Action = function() plr.Character:SetPrimaryPartCFrame(player.Character:GetPrimaryPartCFrame()) end},
-        {Text = "💀 ฆ่าผู้เล่น", Action = function() plr.Character:BreakJoints() end},
-        {Text = "👁️‍🗨️ ติดตามผู้เล่น", Action = function() game.Workspace.CurrentCamera.CameraSubject = plr.Character end},
-        {Text = "↩️ กลับมุมมองตัวเอง", Action = function() game.Workspace.CurrentCamera.CameraSubject = player.Character end}
-    }
-
-    local buttonWidth = 1 / #buttons
-
-    for i, btnData in ipairs(buttons) do
-        local button = Instance.new("TextButton")
-        button.Parent = actionFrame
-        button.Size = UDim2.new(buttonWidth, -5, 1, 0)
-        button.Position = UDim2.new((i - 1) * buttonWidth, 0, 0, 0)
-        button.Text = btnData.Text
-        button.TextSize = 14
-        button.Font = Enum.Font.Gotham
-        button.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-        button.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-        local buttonCorner = Instance.new("UICorner")
-        buttonCorner.Parent = button
-        buttonCorner.CornerRadius = UDim.new(0.2, 0)
-
-        button.MouseButton1Click:Connect(btnData.Action)
     end
 end
 
@@ -186,7 +173,7 @@ toggleButton.MouseButton1Click:Connect(function()
     toggleButton.Text = mainFrame.Visible and "❌ ปิดเมนู" or "📋 เปิดเมนู"
 end)
 
--- อัปเดตผู้เล่นเมื่อพิมพ์ในช่องค้นหา
+-- ค้นหาผู้เล่น
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
     updatePlayerList(searchBox.Text)
 end)
