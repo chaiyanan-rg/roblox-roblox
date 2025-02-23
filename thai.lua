@@ -1,6 +1,8 @@
 local player = game.Players.LocalPlayer
+local playerGui = player:FindFirstChild("PlayerGui") or player:WaitForChild("PlayerGui")
+
 local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = player:WaitForChild("PlayerGui")
+screenGui.Parent = playerGui
 
 -- สร้างหน้าหลัก
 local mainFrame = Instance.new("Frame")
