@@ -28,16 +28,3 @@ addButton.Position = UDim2.new(0.1, 0, 0.6, 0)
 addButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 addButton.Text = "Add Cash"
 addButton.TextSize = 20
-
-addButton.MouseButton1Click:Connect(function()
-    local amount = tonumber(inputBox.Text)
-    if amount and amount > 0 then
-        local leaderstats = player:FindFirstChild("leaderstats")
-        if leaderstats then
-            local cash = leaderstats:FindFirstChild("Cash")
-            if cash then
-                cash.Value = cash.Value + amount
-            end
-        end
-    end
-end)
