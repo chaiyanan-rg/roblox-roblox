@@ -5,11 +5,11 @@ screenGui.Parent = player:WaitForChild("PlayerGui")
 -- สร้างหน้าหลัก
 local mainFrame = Instance.new("Frame")
 mainFrame.Parent = screenGui
-mainFrame.Size = UDim2.new(0, 400, 0, 400)
+mainFrame.Size = UDim2.new(0, 400, 0, 500)
 mainFrame.Position = UDim2.new(0.5, -200, 0.35, 0)
 mainFrame.BackgroundColor3 = Color3.fromRGB(240, 240, 255)
 mainFrame.BorderSizePixel = 0
-mainFrame.Visible = false
+mainFrame.Visible = true
 mainFrame.Active = true
 mainFrame.Draggable = true
 
@@ -117,7 +117,6 @@ local function updatePlayerList(searchTerm)
                 selectedPlayer = plr
                 -- แสดงข้อความว่าเลือกผู้เล่นแล้ว
                 nameLabel.Text = "คุณเลือก: " .. plr.Name
-                showActionMenu()
             end)
         end
     end
@@ -129,9 +128,9 @@ local function showActionMenu()
 
     -- เมนูตัวเลือก
     local actionFrame = Instance.new("Frame")
-    actionFrame.Parent = mainFrame
+    actionFrame.Parent = screenGui
     actionFrame.Size = UDim2.new(0.9, 0, 0, 120)
-    actionFrame.Position = UDim2.new(0.05, 0, 0.65, 0)
+    actionFrame.Position = UDim2.new(0.05, 0, 0.75, 0)
     actionFrame.BackgroundColor3 = Color3.fromRGB(230, 230, 250)
     
     local actionCorner = Instance.new("UICorner")
@@ -188,31 +187,10 @@ local function showActionMenu()
             selectedPlayer.Character:BreakJoints()
         end
     end)
-
-    -- ฟังก์ชันปิดเมนู
-    local closeButton = Instance.new("TextButton")
-    closeButton.Parent = actionFrame
-    closeButton.Size = UDim2.new(1, 0, 0, 40)
-    closeButton.Position = UDim2.new(0, 0, 0.7, 0)
-    closeButton.Text = "❌ ปิดเมนู"
-    closeButton.TextSize = 16
-    closeButton.Font = Enum.Font.Gotham
-    closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-    closeButton.MouseButton1Click:Connect(function()
-        actionFrame:Destroy()
-    end)
 end
 
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
     updatePlayerList(searchBox.Text)
-end)
-
-mainFrame:GetPropertyChangedSignal("Visible"):Connect(function()
-    if mainFrame.Visible then
-        updatePlayerList("")
-    end
 end)
 
 -- ฟังก์ชันเปิด/ปิดเมนู
