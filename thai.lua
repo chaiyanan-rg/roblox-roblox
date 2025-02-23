@@ -43,51 +43,47 @@ local menuCorner = Instance.new("UICorner")
 menuCorner.Parent = menuFrame
 menuCorner.CornerRadius = UDim.new(0.1, 0)
 
--- สร้าง ScrollingFrame สำหรับรายชื่อผู้เล่น
+local dropDown = Instance.new("TextButton")
+dropDown.Parent = menuFrame
+dropDown.Size = UDim2.new(0.8, 0, 0, 30)
+dropDown.Position = UDim2.new(0.1, 0, 0.05, 0)
+dropDown.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+dropDown.Text = "เลือกผู้เล่น"
+dropDown.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local dropCorner = Instance.new("UICorner")
+dropCorner.Parent = dropDown
+dropCorner.CornerRadius = UDim.new(0.2, 0)
+
 local playerList = Instance.new("ScrollingFrame")
 playerList.Parent = menuFrame
-playerList.Size = UDim2.new(0.8, 0, 0.4, 0)
-playerList.Position = UDim2.new(0.1, 0, 0.1, 0)
+playerList.Size = UDim2.new(0.8, 0, 0, 100)
+playerList.Position = UDim2.new(0.1, 0, 0.2, 0)
 playerList.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+playerList.Visible = false
 playerList.CanvasSize = UDim2.new(0, 0, 5, 0)
-playerList.BorderSizePixel = 2
-playerList.ScrollBarThickness = 5
-playerList.AutomaticCanvasSize = Enum.AutomaticSize.Y
-
-local listCorner = Instance.new("UICorner")
-listCorner.Parent = playerList
-listCorner.CornerRadius = UDim.new(0.1, 0)
 
 local selectedPlayer = nil
 
--- อัปเดตรายชื่อผู้เล่น
-local function updatePlayerList()
+dropDown.MouseButton1Click:Connect(function()
+    playerList.Visible = not playerList.Visible
     playerList:ClearAllChildren()
     
     for _, plr in pairs(game.Players:GetPlayers()) do
-        local button = Instance.new("TextButton")
-        button.Parent = playerList
-        button.Size = UDim2.new(1, 0, 0, 25)
-        button.Text = plr.Name
-        button.TextColor3 = Color3.fromRGB(255, 255, 255)
-        button.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
-        button.Font = Enum.Font.Gotham
-        button.TextSize = 14
+        if plr ~= player then
+            local button = Instance.new("TextButton")
+            button.Parent = playerList
+            button.Size = UDim2.new(1, 0, 0, 25)
+            button.Text = plr.Name
+            button.TextColor3 = Color3.fromRGB(255, 255, 255)
+            button.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
 
-        local btnCorner = Instance.new("UICorner")
-        btnCorner.Parent = button
-        btnCorner.CornerRadius = UDim.new(0.2, 0)
-
-        button.MouseButton1Click:Connect(function()
-            selectedPlayer = plr
-        end)
-    end
-end
-
--- ดึงรายชื่อทุกครั้งที่เปิดเมนู
-menuFrame:GetPropertyChangedSignal("Visible"):Connect(function()
-    if menuFrame.Visible then
-        updatePlayerList()
+            button.MouseButton1Click:Connect(function()
+                selectedPlayer = plr
+                dropDown.Text = "เลือก: " .. plr.Name
+                playerList.Visible = false
+            end)
+        end
     end
 end)
 
@@ -111,19 +107,19 @@ local function createActionButton(icon, text, pos, action)
     end)
 end
 
-createActionButton("💀", "ฆ่าผู้เล่น", 0.55, function(target)
+createActionButton("💀", "ฆ่าผู้เล่น", 0.4, function(target)
     if target.Character then
         target.Character:BreakJoints()
     end
 end)
 
-createActionButton("🚀", "ไปหาผู้เล่น", 0.7, function(target)
+createActionButton("🚀", "ไปหาผู้เล่น", 0.55, function(target)
     if player.Character and target.Character then
         player.Character:MoveTo(target.Character:GetPrimaryPartCFrame().Position)
     end
 end)
 
-createActionButton("🌀", "ดึงผู้เล่นมา", 0.85, function(target)
+createActionButton("🌀", "ดึงผู้เล่นมา", 0.7, function(target)
     if target.Character and player.Character then
         target.Character:SetPrimaryPartCFrame(player.Character:GetPrimaryPartCFrame())
     end
