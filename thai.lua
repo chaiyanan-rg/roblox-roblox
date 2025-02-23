@@ -1,17 +1,17 @@
 local player = game.Players.LocalPlayer
-local playerGui = player:FindFirstChild("PlayerGui") or player:WaitForChild("PlayerGui")
-
 local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = playerGui
+screenGui.Parent = player:WaitForChild("PlayerGui")
 
 -- สร้างหน้าหลัก
 local mainFrame = Instance.new("Frame")
 mainFrame.Parent = screenGui
-mainFrame.Size = UDim2.new(0, 400, 0, 450)
-mainFrame.Position = UDim2.new(0.5, -200, 0.35, 0) -- ล็อกเมนูกลางจอ
+mainFrame.Size = UDim2.new(0, 400, 0, 400)
+mainFrame.Position = UDim2.new(0.5, -200, 0.35, 0)
 mainFrame.BackgroundColor3 = Color3.fromRGB(240, 240, 255)
 mainFrame.BorderSizePixel = 0
 mainFrame.Visible = false
+mainFrame.Active = true
+mainFrame.Draggable = true
 
 local frameCorner = Instance.new("UICorner")
 frameCorner.Parent = mainFrame
@@ -22,7 +22,7 @@ local header = Instance.new("TextLabel")
 header.Parent = mainFrame
 header.Size = UDim2.new(1, 0, 0, 40)
 header.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-header.Text = "🕹️ เมนูควบคุมผู้เล่น"
+header.Text = "🎮 เมนูควบคุมผู้เล่น"
 header.TextColor3 = Color3.fromRGB(255, 255, 255)
 header.TextSize = 18
 header.Font = Enum.Font.GothamBold
@@ -114,21 +114,29 @@ mainFrame:GetPropertyChangedSignal("Visible"):Connect(function()
     end
 end)
 
--- ฟังก์ชันสร้างปุ่มคำสั่ง
-local function createActionButton(emoji, text, pos, action)
-    local button = Instance.new("TextButton")
+-- ฟังก์ชันสร้างปุ่ม
+local function createActionButton(icon, text, pos, action)
+    local button = Instance.new("ImageButton")
     button.Parent = mainFrame
     button.Size = UDim2.new(0.9, 0, 0, 40)
     button.Position = UDim2.new(0.05, 0, pos, 0)
     button.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-    button.Text = emoji .. " " .. text
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    button.Font = Enum.Font.GothamBold
-    button.TextSize = 16
+    button.Image = icon 
 
     local btnCorner = Instance.new("UICorner")
     btnCorner.Parent = button
     btnCorner.CornerRadius = UDim.new(0.2, 0)
+
+    local buttonText = Instance.new("TextLabel")
+    buttonText.Parent = button
+    buttonText.Size = UDim2.new(0.8, 0, 1, 0)
+    buttonText.Position = UDim2.new(0.2, 0, 0, 0)
+    buttonText.BackgroundTransparency = 1
+    buttonText.Text = text
+    buttonText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    buttonText.Font = Enum.Font.GothamBold
+    buttonText.TextSize = 16
+    buttonText.TextXAlignment = Enum.TextXAlignment.Left
 
     button.MouseButton1Click:Connect(function()
         if selectedPlayer then
@@ -137,19 +145,19 @@ local function createActionButton(emoji, text, pos, action)
     end)
 end
 
-createActionButton("💀", "ฆ่าผู้เล่น", 0.65, function(target)
+createActionButton("🔪", "ฆ่าผู้เล่น", 0.65, function(target)
     if target.Character then
         target.Character:BreakJoints()
     end
 end)
 
-createActionButton("🚀", "ไปหาผู้เล่น", 0.75, function(target)
+createActionButton("👷🏻→🧒🏻", "ไปหาผู้เล่น", 0.75, function(target)
     if player.Character and target.Character then
         player.Character:MoveTo(target.Character:GetPrimaryPartCFrame().Position)
     end
 end)
 
-createActionButton("🔗", "ดึงผู้เล่นมา", 0.85, function(target)
+createActionButton("👷🏻←🧒🏻", "ดึงผู้เล่นมา", 0.85, function(target)
     if target.Character and player.Character then
         target.Character:SetPrimaryPartCFrame(player.Character:GetPrimaryPartCFrame())
     end
@@ -159,9 +167,9 @@ end)
 local openButton = Instance.new("TextButton")
 openButton.Parent = screenGui
 openButton.Size = UDim2.new(0, 100, 0, 40)
-openButton.Position = UDim2.new(0.5, -50, 0.1, 0)
+openButton.Position = UDim2.new(0.05, 0, 0.05, 0)
 openButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-openButton.Text = "📋 เปิดเมนู"
+openButton.Text = "🔧 เปิดเมนู"
 openButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 openButton.Font = Enum.Font.GothamBold
 openButton.TextSize = 14
@@ -169,4 +177,3 @@ openButton.TextSize = 14
 openButton.MouseButton1Click:Connect(function()
     mainFrame.Visible = not mainFrame.Visible
 end)
-
