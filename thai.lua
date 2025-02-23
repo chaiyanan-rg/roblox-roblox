@@ -1,188 +1,179 @@
 local player = game.Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
-local camera = game.Workspace.CurrentCamera
-
--- สร้าง ScreenGui
 local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = playerGui
+screenGui.Parent = player:WaitForChild("PlayerGui")
 
--- ปุ่มหลัก (ใช้ข้อความแทนรูปภาพ)
-local toggleButton = Instance.new("TextButton")
-toggleButton.Parent = screenGui
-toggleButton.Size = UDim2.new(0, 60, 0, 60)
-toggleButton.Position = UDim2.new(0.05, 0, 0.5, -30)
-toggleButton.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- สีม่วง
-toggleButton.Text = "⚙️"
-toggleButton.TextSize = 24
-toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleButton.Font = Enum.Font.GothamBold
-toggleButton.Visible = true -- ปุ่มแสดง
+-- สร้างหน้าหลัก
+local mainFrame = Instance.new("Frame")
+mainFrame.Parent = screenGui
+mainFrame.Size = UDim2.new(0, 400, 0, 400)
+mainFrame.Position = UDim2.new(0.5, -200, 0.35, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(240, 240, 255)
+mainFrame.BorderSizePixel = 0
+mainFrame.Visible = false
+mainFrame.Active = true
+mainFrame.Draggable = true
 
--- สร้าง Dashboard (แนวนอน)
-local dashboard = Instance.new("Frame")
-dashboard.Parent = screenGui
-dashboard.Size = UDim2.new(0, 600, 0, 100) -- ขนาดแดชบอร์ดเป็นแนวนอน
-dashboard.Position = UDim2.new(0.5, -300, 0.5, -50) -- อยู่กลางหน้าจอ
-dashboard.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- พื้นหลังสีขาว
-dashboard.BackgroundTransparency = 0.5 -- ความโปร่งใสของพื้นหลัง
-dashboard.BorderSizePixel = 2
-dashboard.BorderColor3 = Color3.fromRGB(128, 0, 128) -- สีม่วง
-dashboard.Visible = false -- เริ่มต้นซ่อนแดชบอร์ด
+local frameCorner = Instance.new("UICorner")
+frameCorner.Parent = mainFrame
+frameCorner.CornerRadius = UDim.new(0.05, 0)
 
-local dashboardCorner = Instance.new("UICorner")
-dashboardCorner.Parent = dashboard
-dashboardCorner.CornerRadius = UDim.new(0.1, 0)
+-- สร้างแถบหัวข้อ
+local header = Instance.new("TextLabel")
+header.Parent = mainFrame
+header.Size = UDim2.new(1, 0, 0, 40)
+header.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+header.Text = "🎮 เมนูควบคุมผู้เล่น"
+header.TextColor3 = Color3.fromRGB(255, 255, 255)
+header.TextSize = 18
+header.Font = Enum.Font.GothamBold
 
--- หัวข้อ Dashboard
-local title = Instance.new("TextLabel")
-title.Parent = dashboard
-title.Size = UDim2.new(0.3, 0, 1, 0) -- ขนาดหัวข้อ
-title.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- สีม่วง
-title.Text = "⚙️ แผงควบคุมแอดมิน"
-title.TextSize = 24
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.Font = Enum.Font.GothamBold
-
-local titleCorner = Instance.new("UICorner")
-titleCorner.Parent = title
-titleCorner.CornerRadius = UDim.new(0.1, 0)
+local headerCorner = Instance.new("UICorner")
+headerCorner.Parent = header
+headerCorner.CornerRadius = UDim.new(0.1, 0)
 
 -- ช่องค้นหาผู้เล่น
 local searchBox = Instance.new("TextBox")
-searchBox.Parent = dashboard
-searchBox.Size = UDim2.new(0.2, 0, 1, 0)
-searchBox.Position = UDim2.new(0.3, 0, 0, 0)
-searchBox.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- สีม่วง
-searchBox.Text = "🔍 ค้นหาผู้เล่น..."
-searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-searchBox.ClearTextOnFocus = true
+searchBox.Parent = mainFrame
+searchBox.Size = UDim2.new(0.9, 0, 0, 30)
+searchBox.Position = UDim2.new(0.05, 0, 0.12, 0)
+searchBox.PlaceholderText = "🔍 ค้นหาผู้เล่น..."
+searchBox.Text = ""
+searchBox.TextSize = 14
+searchBox.Font = Enum.Font.Gotham
+searchBox.BackgroundColor3 = Color3.fromRGB(230, 230, 250)
+searchBox.TextColor3 = Color3.fromRGB(100, 0, 150)
 
 local searchCorner = Instance.new("UICorner")
 searchCorner.Parent = searchBox
-searchCorner.CornerRadius = UDim.new(0.2, 0)
+searchCorner.CornerRadius = UDim.new(0.1, 0)
 
 -- รายการผู้เล่น
 local playerList = Instance.new("ScrollingFrame")
-playerList.Parent = dashboard
-playerList.Size = UDim2.new(0.5, 0, 1, 0)
-playerList.Position = UDim2.new(0.5, 0, 0, 0)
-playerList.BackgroundColor3 = Color3.fromRGB(230, 230, 230) -- สีรอง
+playerList.Parent = mainFrame
+playerList.Size = UDim2.new(0.9, 0, 0.4, 0)
+playerList.Position = UDim2.new(0.05, 0, 0.2, 0)
+playerList.BackgroundColor3 = Color3.fromRGB(230, 230, 250)
+playerList.BorderSizePixel = 0
 playerList.CanvasSize = UDim2.new(0, 0, 5, 0)
+playerList.ScrollBarThickness = 5
+playerList.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
--- ฟังก์ชันดึงรูปโปรไฟล์ผู้เล่น
-local function getProfileImage(player)
-    local avatarImage = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
-    return avatarImage
-end
+local listCorner = Instance.new("UICorner")
+listCorner.Parent = playerList
+listCorner.CornerRadius = UDim.new(0.1, 0)
 
--- ฟังก์ชันอัปเดตรายการผู้เล่น
-local function updateDashboard()
+local selectedPlayer = nil
+
+-- ฟังก์ชันอัปเดตรายชื่อผู้เล่น
+local function updatePlayerList(searchTerm)
     playerList:ClearAllChildren()
     
     for _, plr in pairs(game.Players:GetPlayers()) do
-        if searchBox.Text == "🔍 ค้นหาผู้เล่น..." or plr.Name:lower():find(searchBox.Text:lower()) then
-            local row = Instance.new("Frame")
-            row.Parent = playerList
-            row.Size = UDim2.new(1, 0, 0, 60)
-            row.BackgroundColor3 = Color3.fromRGB(200, 200, 255) -- สีรอง
+        if searchTerm == "" or string.find(string.lower(plr.Name), string.lower(searchTerm)) then
+            local playerFrame = Instance.new("Frame")
+            playerFrame.Parent = playerList
+            playerFrame.Size = UDim2.new(1, 0, 0, 40)
+            playerFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 
-            local rowCorner = Instance.new("UICorner")
-            rowCorner.Parent = row
-            rowCorner.CornerRadius = UDim.new(0.2, 0)
+            local frameCorner = Instance.new("UICorner")
+            frameCorner.Parent = playerFrame
+            frameCorner.CornerRadius = UDim.new(0.2, 0)
 
-            -- รูปโปรไฟล์ผู้เล่น
-            local profileImage = Instance.new("ImageLabel")
-            profileImage.Parent = row
-            profileImage.Size = UDim2.new(0, 50, 0, 50)
-            profileImage.Position = UDim2.new(0, 10, 0, 5)
-            profileImage.Image = getProfileImage(plr)  -- ดึงรูปโปรไฟล์จาก URL
-            profileImage.BackgroundTransparency = 1
-            profileImage.BorderSizePixel = 0
+            -- รูปโปรไฟล์
+            local avatar = Instance.new("ImageLabel")
+            avatar.Parent = playerFrame
+            avatar.Size = UDim2.new(0, 30, 0, 30)
+            avatar.Position = UDim2.new(0.02, 0, 0.1, 0)
+            avatar.Image = "https://www.roblox.com/headshot-thumbnail/image?userId="..plr.UserId.."&width=48&height=48&format=png"
 
             -- ชื่อผู้เล่น
             local nameLabel = Instance.new("TextLabel")
-            nameLabel.Parent = row
-            nameLabel.Size = UDim2.new(0.4, 0, 1, 0)
+            nameLabel.Parent = playerFrame
+            nameLabel.Size = UDim2.new(0.7, 0, 1, 0)
             nameLabel.Position = UDim2.new(0.2, 0, 0, 0)
-            nameLabel.Text = "👤 " .. plr.Name
-            nameLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+            nameLabel.BackgroundTransparency = 1
+            nameLabel.Text = plr.Name
+            nameLabel.TextSize = 14
             nameLabel.Font = Enum.Font.Gotham
+            nameLabel.TextColor3 = Color3.fromRGB(100, 0, 150)
 
-            -- ปุ่มวาร์ปไปหาผู้เล่น
-            local tpButton = Instance.new("TextButton")
-            tpButton.Parent = row
-            tpButton.Size = UDim2.new(0.2, 0, 1, 0)
-            tpButton.Position = UDim2.new(0.55, 0, 0, 0)
-            tpButton.Text = "🚀 วาร์ป"
-            tpButton.BackgroundColor3 = Color3.fromRGB(0, 200, 255)
-            tpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-            -- ปุ่มดึงผู้เล่นมาหา
-            local bringButton = Instance.new("TextButton")
-            bringButton.Parent = row
-            bringButton.Size = UDim2.new(0.2, 0, 1, 0)
-            bringButton.Position = UDim2.new(0.75, 0, 0, 0)
-            bringButton.Text = "🌀 ดึงมา"
-            bringButton.BackgroundColor3 = Color3.fromRGB(255, 140, 0)
-            bringButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-            -- ฟังก์ชันวาร์ปไปหาผู้เล่น
-            tpButton.MouseButton1Click:Connect(function()
-                if player.Character and plr.Character then
-                    player.Character:SetPrimaryPartCFrame(plr.Character:GetPrimaryPartCFrame())
-                end
-            end)
-
-            -- ฟังก์ชันดึงผู้เล่นมาหา
-            bringButton.MouseButton1Click:Connect(function()
-                if plr.Character and player.Character then
-                    plr.Character:SetPrimaryPartCFrame(player.Character:GetPrimaryPartCFrame())
-                end
-            end)
-
-            -- ปุ่มดูมุมมองผู้เล่น
-            local viewButton = Instance.new("TextButton")
-            viewButton.Parent = row
-            viewButton.Size = UDim2.new(0.2, 0, 1, 0)
-            viewButton.Position = UDim2.new(0.95, 0, 0, 0)
-            viewButton.Text = "👁️ ดูมุมมอง"
-            viewButton.BackgroundColor3 = Color3.fromRGB(100, 100, 255)
-            viewButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-            -- ฟังก์ชันดูมุมมองผู้เล่น
-            viewButton.MouseButton1Click:Connect(function()
-                if plr.Character then
-                    camera.CameraSubject = plr.Character
-                    camera.CameraType = Enum.CameraType.Attach
-                end
+            playerFrame.MouseButton1Click:Connect(function()
+                selectedPlayer = plr
             end)
         end
     end
 end
 
-game.Players.PlayerAdded:Connect(updateDashboard)
-game.Players.PlayerRemoving:Connect(updateDashboard)
-searchBox:GetPropertyChangedSignal("Text"):Connect(updateDashboard)
-
--- ฟังก์ชันกลับไปมุมมองของตัวเอง
-local backToSelfButton = Instance.new("TextButton")
-backToSelfButton.Parent = dashboard
-backToSelfButton.Size = UDim2.new(0.2, 0, 1, 0)
-backToSelfButton.Position = UDim2.new(1, -100, 0, 0)
-backToSelfButton.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- สีม่วง
-backToSelfButton.Text = "🔄 กลับไปมุมมองตัวเอง"
-backToSelfButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-local backCorner = Instance.new("UICorner")
-backCorner.Parent = backToSelfButton
-backCorner.CornerRadius = UDim.new(0.2, 0)
-
-backToSelfButton.MouseButton1Click:Connect(function()
-    camera.CameraSubject = player.Character
-    camera.CameraType = Enum.CameraType.Custom
+searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+    updatePlayerList(searchBox.Text)
 end)
 
--- เปิดปิดแดชบอร์ด
-toggleButton.MouseButton1Click:Connect(function()
-    dashboard.Visible = not dashboard.Visible
+mainFrame:GetPropertyChangedSignal("Visible"):Connect(function()
+    if mainFrame.Visible then
+        updatePlayerList("")
+    end
+end)
+
+-- ฟังก์ชันสร้างปุ่ม
+local function createActionButton(icon, text, pos, action)
+    local button = Instance.new("ImageButton")
+    button.Parent = mainFrame
+    button.Size = UDim2.new(0.9, 0, 0, 40)
+    button.Position = UDim2.new(0.05, 0, pos, 0)
+    button.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+    button.Image = icon 
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.Parent = button
+    btnCorner.CornerRadius = UDim.new(0.2, 0)
+
+    local buttonText = Instance.new("TextLabel")
+    buttonText.Parent = button
+    buttonText.Size = UDim2.new(0.8, 0, 1, 0)
+    buttonText.Position = UDim2.new(0.2, 0, 0, 0)
+    buttonText.BackgroundTransparency = 1
+    buttonText.Text = text
+    buttonText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    buttonText.Font = Enum.Font.GothamBold
+    buttonText.TextSize = 16
+    buttonText.TextXAlignment = Enum.TextXAlignment.Left
+
+    button.MouseButton1Click:Connect(function()
+        if selectedPlayer then
+            action(selectedPlayer)
+        end
+    end)
+end
+
+createActionButton("rbxassetid://3926305904", "ฆ่าผู้เล่น", 0.65, function(target)
+    if target.Character then
+        target.Character:BreakJoints()
+    end
+end)
+
+createActionButton("rbxassetid://3926307971", "ไปหาผู้เล่น", 0.75, function(target)
+    if player.Character and target.Character then
+        player.Character:MoveTo(target.Character:GetPrimaryPartCFrame().Position)
+    end
+end)
+
+createActionButton("rbxassetid://3926311101", "ดึงผู้เล่นมา", 0.85, function(target)
+    if target.Character and player.Character then
+        target.Character:SetPrimaryPartCFrame(player.Character:GetPrimaryPartCFrame())
+    end
+end)
+
+-- ปุ่มเปิดเมนู
+local openButton = Instance.new("TextButton")
+openButton.Parent = screenGui
+openButton.Size = UDim2.new(0, 100, 0, 40)
+openButton.Position = UDim2.new(0.05, 0, 0.05, 0)
+openButton.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+openButton.Text = "🔧 เปิดเมนู"
+openButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+openButton.Font = Enum.Font.GothamBold
+openButton.TextSize = 14
+
+openButton.MouseButton1Click:Connect(function()
+    mainFrame.Visible = not mainFrame.Visible
 end)
